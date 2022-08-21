@@ -20,6 +20,8 @@ spring:
       path: /h2-console
 app:
   jwt:
+#    expiration: 3600000
+#    jwtRefreshExpirationMs: 12000000
     expiration: 60000
     jwtRefreshExpirationMs: 120000
     secret: jwttoken

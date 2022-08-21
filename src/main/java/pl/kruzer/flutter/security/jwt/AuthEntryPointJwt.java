@@ -31,13 +31,18 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
     final Map<String, Object> body = new HashMap<>();
     body.put("status", HttpServletResponse.SC_UNAUTHORIZED);
     body.put("error", "Unauthorized");
-    body.put("message", authException.getMessage());
     body.put("path", request.getServletPath());
+
+    final String expired = (String) request.getAttribute("expired");
+    if (expired!=null){
+      body.put("message", "expired");
+    }else{
+      body.put("message", "Niepoprawne dane logowania");
+    }
 
     final ObjectMapper mapper = new ObjectMapper();
     mapper.writeValue(response.getOutputStream(), body);
 
-//    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Error: Unauthorized");
   }
 
 }

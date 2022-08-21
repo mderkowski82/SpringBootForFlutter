@@ -1,6 +1,7 @@
 package pl.kruzer.flutter.security.jwt;
 
 import io.jsonwebtoken.*;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,7 +34,7 @@ public class JwtUtils {
     return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
   }
 
-  public boolean validateJwtToken(String authToken) {
+  public boolean validateJwtToken(String authToken, HttpServletRequest request) {
     try {
       Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
       return true;
@@ -43,6 +44,7 @@ public class JwtUtils {
       logger.error("Invalid JWT token: {}", e.getMessage());
     } catch (ExpiredJwtException e) {
       logger.error("JWT token is expired: {}", e.getMessage());
+      request.setAttribute("expired", e.getMessage());
     } catch (UnsupportedJwtException e) {
       logger.error("JWT token is unsupported: {}", e.getMessage());
     } catch (IllegalArgumentException e) {
